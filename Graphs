@@ -1,0 +1,102 @@
+> #ggplot
+> library(tidyverse)
+> #ggplot2 breaK the graph into components, by using the grammar of graphics.
+> #GRAPH COMPONENTS
+> library(dslabs)
+Warning message:
+package ‘dslabs’ was built under R version 4.0.5 
+> data(murders)
+> #The first step in ggplot2 is to break the graph into components. Three components are: 1. Data 2. Geometry 3. Mappings
+> #Aesthetic mappings depend on what geometry we use.
+> #CREATING A NEW PLOT
+> #The first step to make ggplot is to define a ggplot object which can be done with the function 'ggplot'.
+> #To initiate an object we use following command:
+> ggplot(data=murders)
+> #We can also pipe the data with following code which is equivalent to above code:
+> murders %>% ggplot()
+> p<-ggplot(data=murders)
+> class(p)
+[1] "gg"     "ggplot"
+> print(p)
+> #LAYERS
+> #In ggplot we create the graph by adding layers, we add them component by components. 
+> #Layers can define geometry, compute summary statistics, finds what scales to use and even change styles. 
+> #To add layers we use symbol,'+'. 
+> #Syntax: DATA%>%ggplot()+LAYER 1 + LAYER 2+ LAYER 3+......+LAYER N
+> #Usually first added layers define the geometry
+> #'aes' functions connects the data what we see in the graph.
+> #We refer this connection as 'aesthetic mappings'.
+> murders %>% ggplot()+
++ geom_point(aes(x=population/10^6,y=total))
+> p<-ggplot(data=murders)
+> p+geom_point(aes(population/10^6,total))
+> #ADDING LABEL
+> #'geom_label' and 'geom_text' permits us to add text to the plot. 
+> p+geom_point(aes(population/10^6,total))+geom_text(aes(population/10^6,total,label=abb))
+> 
+> #TINKERING
+> #In order to change the size of the point in a graph we use following code:
+> p+geom_point(aes(population/10^6,total), size=3)+geom_text(aes(population/10^6,total,label=abb))
+> 
+> #In order to move the text away from the overshadowing size points we use following code:
+> p+geom_point(aes(population/10^6,total), size=3)+geom_text(aes(population/10^6,total,label=abb), nudge_x=1)
+> #GLOBAL AESTHETIC MAPPING
+> args(ggplot)
+function (data = NULL, mapping = aes(), ..., environment = parent.frame()) 
+NULL
+> p<-murders %>% ggplot(aes(population/10^6, total, label=abb))
+> p+geom_point(size=3)+
++ geom_text(nudge_x=1.5)
+> p+geom_point(size=3)+
++     + geom_text(aes(x=10, y=800, label="BAZINGA!"))
+Error: Cannot use `+.gg()` with a single argument. Did you accidentally put + on a new line?
+Run `rlang::last_error()` to see where the error occurred.
+> p+geom_point(size=3)+geom_text(aes(x=10,y=800,label="Hello Frands Chail Pee lo!!"))
+> p+geom_point(size=3)+geom_text(aes(x=10,y=800,label="Hello Frands Chai Pi lo!!"))
+> 
+> #ADD ON PACKAGES
+> #'ggthemes' and 'ggrepel' provides finishing to the graph we construct.
+> #The style of ggplot can be changed by using theme function 
+> ds_theme_set()
+> library(ggthemes)
+Error in library(ggthemes) : there is no package called ‘ggthemes’
+> install.packages("ggthemes")
+WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+Installing package into ‘C:/Users/AKSHANSH MISHRA/Documents/R/win-library/4.0’
+(as ‘lib’ is unspecified)
+trying URL 'https://cran.rstudio.com/bin/windows/contrib/4.0/ggthemes_4.2.4.zip'
+Content type 'application/zip' length 450618 bytes (440 KB)
+downloaded 440 KB
+
+package ‘ggthemes’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+	C:\Users\AKSHANSH MISHRA\AppData\Local\Temp\Rtmpa0PuwK\downloaded_packages
+> library(ggthemes)
+Warning message:
+package ‘ggthemes’ was built under R version 4.0.5 
+> p+theme_economist()
+> p<-murders %>% ggplot(aes(population/10^6, total, label=abb))
+> p+geom_point(size=3)+ geom_text(nudge_x=1.5)
+> p+theme_economist()
+> p+geom_point(size=3)+
++ geom_text(nudege_x=0.05)+
++ scale_x_continuous(trans="log10")+
++ scale_y_continuous(trans="log10")
+Warning message:
+Ignoring unknown parameters: nudege_x 
+> p+geom_point(size=3)+
++ geome_text(nudge_x=0.075)+
++ scale_x_log10()+
++ scale_y_log10()
+Error in geome_text(nudge_x = 0.075) : 
+  could not find function "geome_text"
+> p+geom_point(size=3)+ geom_text(nudge_x=0.075) + scale_x_log10()+ scale_y_log10()
+> p+geom_point(size=3)+ geom_text(nudge_x=0.075) + scale_x_log10()+ scale_y_log10()+
++ xlab("Population in Millions (log scale)")+
++ ylab("Total number of murders (log scale")
+> p+geom_point(size=3, color="blue")+ geom_text(nudge_x=0.075) + scale_x_log10()+ scale_y_log10() + xlab("Population in Millions (log scale)")+ ylab("Total number of murders (log scale") +ggtitle("US Gun murders in US 2010")
+> p+geom_point(aes(col=region), size=3)
+> p+theme_economist()
